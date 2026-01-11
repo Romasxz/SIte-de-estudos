@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Plano Semanal - Irmãs</title>
+    <button style="background-color: aquamarine; border-color: black;"><a href="/Inicial page.html">Volta para a pagina inicial</a> </button>
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .completed {
+            background: #9aff9a;
+        }
+
+        .queen {
+            background: #ffe9ff;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 8px 14px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Plano Semanal 😐</h2>
+
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Jane</th>
+                <th>Mengan</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button onclick="generateNextWeek()">Gerar Próxima Semana</button>
+    <button onclick="resetar()">Reset Semana</button>
+
+    <script>
+        const tarefasBase = ["Quarto", "Casa de Banho", "Sala", "Cozinha", "Corredor"];
+        const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+        // Gera nova semana, preservando o mínimo do que já foi feito
+        function gerarSemana(janeDobro = false, menganDobro = false, oldSemana = null) {
+            let semana = [];
+            for (let i = 0; i < dias.length; i++) {
+
+                let janeTasks = [tarefasBase[i % tarefasBase.length], tarefasBase[(i + 1) % tarefasBase.length]];
+                let menganTasks = [tarefasBase[(i + 2) % tarefasBase.length], tarefasBase[(i + 3) % tarefasBase.length]];
+
+                if (janeDobro) janeTasks = [...janeTasks, ...janeTasks];
+                if (menganDobro) menganTasks = [...menganTasks, ...menganTasks];
+
+                // preserva mínimo: as tarefas já concluídas permanecem concluídas
+                let concluido = {
+                    jane: janeTasks.map(() => false),
+                    mengan: menganTasks.map(() => false)
+                };
+
+                if (oldSemana && oldSemana[i]) {
+                    // transferir concluído para tarefas correspondentes
+                    oldSemana[i].jane.forEach((t, j) => {
+                        let idx = janeTasks.indexOf(t);
+                        if (idx !== -1) concluido.jane[idx] = oldSemana[i].concluido.jane[j];
+                    });
+                    oldSemana[i].mengan.forEach((t, j) => {
+                        let idx = menganTasks.indexOf(t);
+                        if (idx !== -1) concluido.mengan[idx] = oldSemana[i].concluido.mengan[j];
+                    });
+                }
+
+                semana.push({
+                    dia: dias[i],
+                    jane: janeTasks,
+                    mengan: menganTasks,
+                    concluido: concluido,
+                    rainha: null
+                });
+            }
+            return semana;
+        }
+
+        function load() {
+            let data = localStorage.getItem("semana");
+            if (!data) {
+                data = gerarSemana();
+                save(data);
+            } else {
+                data = JSON.parse(data);
+            }
+            return data;
+        }
+
+        function save(data) {
+            localStorage.setItem("semana", JSON.stringify(data));
+        }
+
+        let semana = load();
+        render();
+
+        function render() {
+            const tbody = document.querySelector("#tabela tbody");
+            tbody.innerHTML = "";
+
+            semana.forEach((d, idx) => {
+                let maxLen = Math.max(d.jane.length, d.mengan.length);
+                for (let t = 0; t < maxLen; t++) {
+
+                    let jTask = d.jane[t] || (d.rainha === 'jane' ? "linda maravilhosa" : "");
+                    let mTask = d.mengan[t] || (d.rainha === 'mengan' ? "linda maravilhosa" : "");
+
+                    tbody.innerHTML += `
+            <tr>
+                ${t === 0 ? `<td rowspan="${maxLen}">${d.dia}</td>` : ""}
+                <td class="${d.concluido.jane[t] ? 'completed' : ''} ${(!d.jane[t] && d.rainha === 'jane' ? 'queen' : '')}"
+                    onclick="toggle(${idx},'jane',${t})">${jTask}</td>
+                <td class="${d.concluido.mengan[t] ? 'completed' : ''} ${(!d.mengan[t] && d.rainha === 'mengan' ? 'queen' : '')}"
+                    onclick="toggle(${idx},'mengan',${t})">${mTask}</td>
+            </tr>`;
+                }
+            });
+        }
+
+        function toggle(dia, pessoa, tarefa) {
+            if (!semana[dia][pessoa][tarefa] || semana[dia][pessoa][tarefa] === "linda maravilhosa") return;
+            semana[dia].concluido[pessoa][tarefa] = !semana[dia].concluido[pessoa][tarefa];
+            save(semana);
+            render();
+        }
+
+        function generateNextWeek() {
+            let falhaJane = 0, falhaMengan = 0;
+
+            semana.forEach(d => {
+                d.concluido.jane.forEach(c => { if (!c) falhaJane++; });
+                d.concluido.mengan.forEach(c => { if (!c) falhaMengan++; });
+            });
+
+            let janeDobro = falhaJane > 0;
+            let menganDobro = falhaMengan > 0;
+
+            // gerar nova semana preservando mínimo do que já foi feito
+            semana = gerarSemana(janeDobro, menganDobro, semana);
+
+            // marcar rainha para quem não faz em dobro
+            if (!janeDobro) semana.forEach(d => d.rainha = 'jane');
+            if (!menganDobro) semana.forEach(d => d.rainha = 'mengan');
+
+            save(semana);
+            render();
+
+            let msg = "";
+            if (janeDobro && !menganDobro) msg = "Jane falhou e vai levar dobro 😑";
+            if (menganDobro && !janeDobro) msg = "Mengan falhou e vai levar dobro 😑";
+            if (menganDobro && janeDobro) msg = "As duas falharam, duas burras a levar dobro 😑";
+            if (!menganDobro && !janeDobro) msg = "Ninguém falhou… milagroso 😐";
+            alert(msg);
+        }
+
+        function resetar() {
+            localStorage.removeItem("semana");
+            semana = gerarSemana();
+            save(semana);
+            render();
+        }
+    </script>
+
+</body>
+
+</html>

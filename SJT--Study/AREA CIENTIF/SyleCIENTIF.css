@@ -1,0 +1,81 @@
+/* FONTE E FUNDO */
+body {
+    font-family: 'Consolas', 'Courier New', monospace;
+    /* mais tech */
+    background-color: #ffffff;
+    /* preto quase total */
+    color: #000000;
+    /* verde neon tipo hacker */
+    padding: 15px;
+    line-height: 2.0;
+}
+
+/* TÍTULO PRINCIPAL */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    text-shadow: 0 0 15px #000000, 0 0 25px #1a564e;
+    /* glow futurista */
+    letter-spacing: 2px;
+}
+
+
+/* BLOCOS DE EXERCÍCIO */
+.exercise {
+    background-color: #75aa9c;
+    /* escuro para contraste */
+    border-left: 10px solid #394e44;
+    /* barra neon à esquerda */
+    border-radius: 60px;
+    padding: 25px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px #47cec333;
+    /* glow suave */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* EFEITO QUANDO PASSA O MOUSE */
+.exercise:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px #36ff43, 0 0 40px #00ffea55;
+}
+
+/* NUMERAÇÃO AUTOMÁTICA (opcional) */
+.exercise::before {
+    content: counter(exercise) ". ";
+    counter-increment: exercise;
+    font-weight: bold;
+    color: #000000;
+    margin-right: 10px;
+}
+
+/* RESET DO CONTADOR */
+body {
+    counter-reset: exercise;
+}
+
+/*link por visitar*/
+a:link {
+    color: rgb(0, 0, 0);
+}
+
+/*link por visitado*/
+a:visited {
+    color: rgb(0, 221, 255);
+    text-decoration: line-through;
+}
+
+/*link por cima do link*/
+a:hover {
+    color: rgb(212, 32, 32);
+}
+
+/*link selecionado*/
+a:active {
+    color: rgb(204, 0, 255);
+}
+
+a:link {
+    text-decoration: none;
+}

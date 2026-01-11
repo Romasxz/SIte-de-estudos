@@ -1,0 +1,111 @@
+/* Configurações Gerais */
+:root {
+    --bg-dark: #1a202c;
+    --text-light: #cbd5e0;
+    --accent-blue: #4299e1;
+    --body-bg: #f7fafc;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--body-bg);
+}
+
+/* Esconde o checkbox real */
+#menu-toggle {
+    display: none;
+}
+
+/* Estilo do Botão Estrela */
+.star-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1001;
+    background: white;
+    padding: 8px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.star-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Navbar Lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Escondida por padrão */
+    width: 260px;
+    height: 100vh;
+    background-color: var(--bg-dark);
+    color: white;
+    transition: all 0.4s ease-in-out;
+    z-index: 1000;
+    padding-top: 80px;
+    overflow-y: auto; /* Permite scroll se houver muitas matérias */
+}
+
+.sidebar-logo {
+    padding: 0 25px 20px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #2d3748;
+    margin-bottom: 10px;
+}
+
+/* Títulos das Categorias */
+.category {
+    padding: 20px 25px 5px;
+    font-size: 11px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+}
+
+/* Links das Matérias */
+.sidebar a {
+    display: block;
+    padding: 12px 25px;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar a:hover {
+    background: #2d3748;
+    color: white;
+    border-left: 4px solid var(--accent-blue);
+}
+
+/* Lógica de Ativação (Quando clica na estrela) */
+#menu-toggle:checked ~ .sidebar {
+    left: 0; /* Mostra a barra */
+}
+
+#menu-toggle:checked ~ .star-btn {
+    left: 275px; /* Estrela acompanha a barra */
+    background: var(--bg-dark);
+}
+
+#menu-toggle:checked ~ .content {
+    margin-left: 260px; /* Empurra o conteúdo para a direita */
+}
+
+/* Área de Conteúdo */
+.content {
+    transition: margin-left 0.4s ease-in-out;
+    padding: 50px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}

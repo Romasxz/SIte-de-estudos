@@ -1,0 +1,49 @@
+/* FONTE E FUNDO */
+body {
+    font-family: 'Consolas', 'Courier New', monospace; /* mais tech */
+    background-color: #ffffff; /* preto quase total */
+    color: #000000; /* verde neon tipo hacker */
+    padding: 20px;
+    line-height: 1.8;
+}
+
+/* TÍTULO PRINCIPAL */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px #000000, 0 0 20px #00ffea; /* glow futurista */
+    letter-spacing: 2px;
+}
+
+
+/* BLOCOS DE EXERCÍCIO */
+.exercise {
+    background-color: #e9e1e1; /* escuro para contraste */
+    border-left: 5px solid #4e575e; /* barra neon à esquerda */
+    border-radius: 5px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px #00ffea33; /* glow suave */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* EFEITO QUANDO PASSA O MOUSE */
+.exercise:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px #4e5f5d, 0 0 40px #00ffea55;
+}
+
+/* NUMERAÇÃO AUTOMÁTICA (opcional) */
+.exercise::before {
+    content: counter(exercise) ". ";
+    counter-increment: exercise;
+    font-weight: bold;
+    color: #000000;
+    margin-right: 10px;
+}
+
+/* RESET DO CONTADOR */
+body {
+    counter-reset: exercise;
+}
